@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  frontend:
+    image: node:20-alpine
+    container_name: nextjs-frontend
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
+    command: sh -c "npm install && npm run dev"
+
+# Optional production build service
+  frontend-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: nextjs-frontend-prod
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - api  # if your frontend talks to a backend service
